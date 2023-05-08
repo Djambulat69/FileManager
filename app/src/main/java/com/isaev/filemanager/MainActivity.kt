@@ -5,17 +5,19 @@ import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
-import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.isaev.filemanager.databinding.ActivityMainBinding
-import java.io.File
+
 
 class MainActivity : AppCompatActivity() {
 
     private var _binding: ActivityMainBinding? = null
     private val binding: ActivityMainBinding get() = _binding!!
+
     private val viewModel: MainViewModel by viewModels()
 
     private val isHighApi get() = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R
@@ -35,14 +37,30 @@ class MainActivity : AppCompatActivity() {
             viewModel.refreshAccess(storageAccess)
         }
 
-        viewModel.storageAccess.observe(this) { allowed ->
+        binding.recyclerView.adapter = FilesAdapter()
+        binding.recyclerView.addItemDecoration(
+            DividerItemDecoration(
+                this,
+                (binding.recyclerView.layoutManager as LinearLayoutManager).orientation
+            )
+        )
 
+        viewModel.storageAccess.observe(this) { allowed ->
             binding.grantPermissionText.isVisible = !allowed
             binding.grantButton.isVisible = !allowed
 
             binding.recyclerView.isVisible = allowed
+
+            if (allowed) {
+                viewModel.refreshFilesList(
+                    Environment.getExternalStorageDirectory().listFiles() ?: emptyArray()
+                )
+            }
         }
 
+        viewModel.currentFilesList.observeForever { files ->
+            (binding.recyclerView.adapter as FilesAdapter).submitList(files)
+        }
 
         val legacyPermissionLauncher =
             registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
@@ -62,13 +80,6 @@ class MainActivity : AppCompatActivity() {
                 legacyPermissionLauncher.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE)
             }
         }
-
-
-        val files: Array<File> =
-            Environment.getExternalStorageDirectory().listFiles() ?: emptyArray()
-
-        Log.i(TAG, files.toList().toString())
-
     }
 
     override fun onResume() {
@@ -85,7 +96,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-
         const val TAG = "MainActivityTAG"
     }
 }
