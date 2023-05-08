@@ -7,14 +7,14 @@ import androidx.recyclerview.widget.ListAdapter
 import com.isaev.filemanager.databinding.ListItemFileBinding
 import java.io.File
 
-class FilesAdapter :
+class FilesAdapter(private val viewModel: MainViewModel) :
     ListAdapter<File, FileViewHolder>(FileDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FileViewHolder {
         val bindingView =
             LayoutInflater.from(parent.context).inflate(R.layout.list_item_file, parent, false)
 
-        return FileViewHolder(ListItemFileBinding.bind(bindingView))
+        return FileViewHolder(ListItemFileBinding.bind(bindingView), viewModel)
     }
 
     override fun onBindViewHolder(holder: FileViewHolder, position: Int) {
@@ -23,7 +23,6 @@ class FilesAdapter :
 }
 
 object FileDiffCallback : DiffUtil.ItemCallback<File>() {
-
     override fun areItemsTheSame(oldItem: File, newItem: File): Boolean {
         return oldItem.hashCode() == newItem.hashCode()
     }
@@ -31,5 +30,4 @@ object FileDiffCallback : DiffUtil.ItemCallback<File>() {
     override fun areContentsTheSame(oldItem: File, newItem: File): Boolean {
         return oldItem == newItem
     }
-
 }

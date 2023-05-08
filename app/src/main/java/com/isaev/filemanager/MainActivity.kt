@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
             viewModel.refreshAccess(storageAccess)
         }
 
-        binding.recyclerView.adapter = FilesAdapter()
+        binding.recyclerView.adapter = FilesAdapter(viewModel)
         binding.recyclerView.addItemDecoration(
             DividerItemDecoration(
                 this,
@@ -55,6 +55,8 @@ class MainActivity : AppCompatActivity() {
                 viewModel.refreshFilesList(
                     Environment.getExternalStorageDirectory().listFiles() ?: emptyArray()
                 )
+
+                viewModel.saveHashCodes(Environment.getExternalStorageDirectory())
             }
         }
 

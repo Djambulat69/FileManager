@@ -1,11 +1,18 @@
 package com.isaev.filemanager
 
+import android.os.FileUtils
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 
 class MainViewModel : ViewModel() {
+
     private val _storageAccess: MutableLiveData<Boolean> = MutableLiveData()
     private val _currentFilesList: MutableLiveData<List<File>> = MutableLiveData()
 
@@ -14,19 +21,20 @@ class MainViewModel : ViewModel() {
 
 
     fun refreshAccess(allowed: Boolean) {
-        _storageAccess.value = allowed
+        if (allowed != storageAccess.value) {
+            _storageAccess.value = allowed
+        }
     }
 
     fun refreshFilesList(files: Array<File>) {
         _currentFilesList.value = files.toList()
     }
 
-    private fun saveHashCodes(files: Array<File>) {
-        files.forEach { file ->
-            if (file.isFile) {
-                saveHashCodeToDb(file.hashCode())
-            } else {
-                saveHashCodes(file.listFiles() ?: emptyArray())
+    fun saveHashCodes(rootDir: File) {
+        viewModelScope.launch(Dispatchers.IO) {
+            rootDir.walkTopDown().forEach { file ->
+                //TODO save to db
+                Log.i("MainViewModelTAG", "${file.name} = ${file.length()} bytes")
             }
         }
     }
