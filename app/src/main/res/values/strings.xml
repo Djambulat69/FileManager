@@ -3,4 +3,6 @@
 
     <string name="allow_access">Allow access to your files so File Manager can help you find and share your files easily.</string>
     <string name="allow">Allow</string>
+
+    <string name="show_modified">Show modified files</string>
 </resources>

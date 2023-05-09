@@ -1,6 +1,8 @@
 package com.isaev.filemanager
 
 
+import androidx.core.view.isVisible
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.isaev.filemanager.databinding.ListItemFileBinding
 import java.io.File
@@ -15,6 +17,10 @@ class FileViewHolder(
 
     init {
         binding.root.setOnClickListener {
+
+            if (adapterPosition == RecyclerView.NO_POSITION)
+                return@setOnClickListener
+
             viewModel.currentFilesList.value?.get(adapterPosition)?.let {
                 if (it.isDirectory) {
                     viewModel.refreshFilesList(it.listFiles() ?: emptyArray())
@@ -54,6 +60,10 @@ class FileViewHolder(
             if (file.isFile)
                 "${file.readableLength()}, $fileDate"
             else fileDate
+
+
+        // Можно лучше, но время чуть поджимает
+        binding.editIcon.isVisible = viewModel.isModified(file) && file.isFile
     }
 
 }

@@ -2,19 +2,15 @@ package com.isaev.filemanager
 
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.icu.text.SimpleDateFormat
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
-import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.isaev.filemanager.databinding.ActivityMainBinding
-import java.util.Calendar
-
 
 class MainActivity : AppCompatActivity() {
 
@@ -47,6 +43,15 @@ class MainActivity : AppCompatActivity() {
                 (binding.recyclerView.layoutManager as LinearLayoutManager).orientation
             )
         )
+        binding.toolbar.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.show_modified_menu_item -> {
+                    viewModel.showModifiedFiles()
+                    true
+                }
+                else -> false
+            }
+        }
 
         viewModel.storageAccess.observe(this) { allowed ->
             binding.grantPermissionText.isVisible = !allowed
@@ -56,7 +61,7 @@ class MainActivity : AppCompatActivity() {
 
             if (allowed) {
                 viewModel.refreshFilesList(
-                    Environment.getExternalStorageDirectory().listFiles() ?: emptyArray()
+                    Environment.getExternalStorageDirectory()
                 )
 
                 viewModel.saveHashCodes(Environment.getExternalStorageDirectory())
