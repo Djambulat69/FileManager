@@ -34,7 +34,6 @@ class MainViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             rootDir.walkTopDown().forEach { file ->
                 //TODO save to db
-                Log.i("MainViewModelTAG", "${file.name} = ${file.length()} bytes")
             }
         }
     }
