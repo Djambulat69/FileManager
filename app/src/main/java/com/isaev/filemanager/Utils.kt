@@ -2,15 +2,7 @@ package com.isaev.filemanager
 
 import android.icu.text.SimpleDateFormat
 import java.io.File
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 import java.util.*
-import kotlin.time.Duration.Companion.days
-import kotlin.time.Duration.Companion.hours
-import kotlin.time.Duration.Companion.milliseconds
-import kotlin.time.Duration.Companion.minutes
 
 fun Double.format(digits: Int) = "%.${digits}f"
     .format(this)
