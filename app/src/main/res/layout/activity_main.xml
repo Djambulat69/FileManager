@@ -10,10 +10,9 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="64dp"
-        app:menu="@menu/main_menu"
         app:layout_constraintTop_toTopOf="parent"
+        app:menu="@menu/main_menu"
         app:title="@string/app_name" />
-
 
     <View
         android:id="@+id/toolbar_divider"
@@ -21,6 +20,34 @@
         android:layout_height="1dp"
         android:background="?android:attr/listDivider"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
+
+    <HorizontalScrollView
+        android:id="@+id/path_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:scrollbars="none"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_divider">
+
+        <TextView
+            android:id="@+id/path_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:paddingHorizontal="18dp"
+            android:textSize="14sp"
+            app:layout_constraintTop_toBottomOf="@id/toolbar_divider"
+            tools:text="emulated/0/storage/Download/sdfksjfsjkfhsjkksdjfhsdjkfhskdskdjfhskdjfh" />
+
+    </HorizontalScrollView>
+
+    <View
+        android:id="@+id/path_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintTop_toBottomOf="@id/path_scroll" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
@@ -30,7 +57,7 @@
         android:splitMotionEvents="false"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar_divider"
+        app:layout_constraintTop_toBottomOf="@id/path_divider"
         tools:listitem="@layout/list_item_file" />
 
     <TextView

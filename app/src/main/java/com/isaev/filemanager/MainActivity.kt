@@ -85,6 +85,7 @@ class MainActivity : AppCompatActivity(), SortDialogCallback {
 
         viewModel.currentFilesList.observeForever { files ->
             (binding.recyclerView.adapter as FilesAdapter).submitList(files)
+            binding.pathText.text = viewModel.currentRootFile.path
         }
 
         val legacyPermissionLauncher =
