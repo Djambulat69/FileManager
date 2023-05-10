@@ -12,7 +12,8 @@
         android:id="@+id/file_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="70dp"
         android:layout_marginBottom="3dp"
         android:maxLines="1"
         android:textColor="?attr/colorOnBackground"
@@ -29,7 +30,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="3dp"
+        android:layout_marginEnd="70dp"
         android:maxLines="1"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -54,6 +57,17 @@
         android:layout_height="14dp"
         android:layout_margin="4dp"
         android:src="@drawable/edit_on"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/share_button"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginHorizontal="12dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/share"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

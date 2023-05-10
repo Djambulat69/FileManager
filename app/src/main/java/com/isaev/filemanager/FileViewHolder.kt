@@ -1,7 +1,6 @@
 package com.isaev.filemanager
 
 
-import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.widget.Toast
 import androidx.core.content.FileProvider
@@ -42,6 +41,23 @@ class FileViewHolder(
                 }
             }
         }
+
+        binding.shareButton.setOnClickListener {
+            if (adapterPosition == RecyclerView.NO_POSITION)
+                return@setOnClickListener
+
+            viewModel.currentFilesList.value?.get(adapterPosition)?.takeIf { it.isFile }
+                ?.let { file ->
+                    val uri = FileProvider.getUriForFile(context, "com.isaev.fileprovider", file)
+                    context.startActivity(
+                        Intent(Intent.ACTION_SEND).apply {
+                            type = context.contentResolver.getType(uri)
+                            putExtra(Intent.EXTRA_STREAM, uri)
+                            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                        }
+                    )
+                }
+        }
     }
 
     fun bind(file: File) {
@@ -76,6 +92,7 @@ class FileViewHolder(
                 "${file.readableLength()}, $fileDate"
             else fileDate
 
+        binding.shareButton.isVisible = file.isFile
 
         // Можно лучше, но время чуть поджимает
         binding.editIcon.isVisible = viewModel.isModified(file) && file.isFile

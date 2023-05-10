@@ -15,4 +15,6 @@
     <string name="name_z_a">Name Z to A</string>
 
     <string name="cant_open_file">Can\'t open file</string>
+
+    <string name="share_file">Share file with others</string>
 </resources>
