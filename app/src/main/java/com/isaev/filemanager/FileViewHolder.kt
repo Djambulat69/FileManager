@@ -1,6 +1,10 @@
 package com.isaev.filemanager
 
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.widget.Toast
+import androidx.core.content.FileProvider
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
@@ -24,6 +28,17 @@ class FileViewHolder(
             viewModel.currentFilesList.value?.get(adapterPosition)?.let {
                 if (it.isDirectory) {
                     viewModel.refreshFilesList(it)
+                } else {
+                    val uri = FileProvider.getUriForFile(context, "com.isaev.fileprovider", it)
+                    try {
+                        context.startActivity(
+                            Intent(Intent.ACTION_VIEW, uri)
+                        )
+                    } catch (_: Exception) {
+                        Toast.makeText(
+                            context, context.getString(R.string.cant_open_file), Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             }
         }
