@@ -5,12 +5,14 @@ import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
+import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.isaev.filemanager.databinding.ActivityMainBinding
+
 
 class MainActivity : AppCompatActivity(), SortDialogCallback {
 
@@ -34,6 +36,14 @@ class MainActivity : AppCompatActivity(), SortDialogCallback {
                 ) == PackageManager.PERMISSION_GRANTED
 
             viewModel.refreshAccess(storageAccess)
+        }
+
+        onBackPressedDispatcher.addCallback {
+            if (Environment.getExternalStorageDirectory() == viewModel.currentRootFile) {
+                finish()
+            } else {
+                viewModel.back()
+            }
         }
 
         binding.recyclerView.adapter = FilesAdapter(viewModel)

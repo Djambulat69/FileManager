@@ -14,13 +14,15 @@ class MainViewModel : ViewModel() {
 
     private val repository = MainRepository()
 
-    private var rootFile = File("")
-
     private val _storageAccess: MutableLiveData<Boolean> = MutableLiveData()
     private val _currentFilesList: MutableLiveData<List<File>> = MutableLiveData()
     private val modifiedFiles = mutableListOf<File>()
 
     private var modifiedShowed = false
+
+    private val _pathFiles: MutableList<File> = mutableListOf(File(""))
+
+    val currentRootFile get() = _pathFiles.last()
 
     var currentSortOption = SortOption.NAME_A_Z
         private set(value) {
@@ -50,9 +52,15 @@ class MainViewModel : ViewModel() {
     }
 
     fun refreshFilesList(file: File) {
-        rootFile = file
+        _pathFiles.add(file)
         _currentFilesList.value =
             file.listFiles()?.sortedWith(currentSortOption.fileComparator).orEmpty()
+    }
+
+    fun back() {
+        _pathFiles.removeLast()
+        _currentFilesList.value =
+            _pathFiles.last().listFiles()?.sortedWith(currentSortOption.fileComparator).orEmpty()
     }
 
     fun saveHashCodes(rootDir: File) {
@@ -74,7 +82,7 @@ class MainViewModel : ViewModel() {
 
     fun showModifiedFiles() {
         if (modifiedShowed)
-            refreshFilesList(rootFile.listFiles() ?: emptyArray())
+            refreshFilesList(currentRootFile.listFiles() ?: emptyArray())
         else
             refreshFilesList(modifiedFiles.toTypedArray())
 

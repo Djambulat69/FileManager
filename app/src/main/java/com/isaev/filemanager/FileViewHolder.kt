@@ -23,7 +23,7 @@ class FileViewHolder(
 
             viewModel.currentFilesList.value?.get(adapterPosition)?.let {
                 if (it.isDirectory) {
-                    viewModel.refreshFilesList(it.listFiles() ?: emptyArray())
+                    viewModel.refreshFilesList(it)
                 }
             }
         }
