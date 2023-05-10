@@ -8,4 +8,10 @@
         android:title="@string/show_modified"
         app:showAsAction="ifRoom" />
 
+    <item
+        android:id="@+id/sort_menu_item"
+        android:icon="@drawable/sort"
+        android:title="@string/sort"
+        app:showAsAction="ifRoom" />
+
 </menu>

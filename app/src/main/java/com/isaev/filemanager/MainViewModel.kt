@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 
 
@@ -21,6 +22,20 @@ class MainViewModel : ViewModel() {
 
     private var modifiedShowed = false
 
+    var currentSortOption = SortOption.NAME_A_Z
+        private set(value) {
+            field = value
+
+            viewModelScope.launch(Dispatchers.Default) {
+                val sorted = _currentFilesList.value?.sortedWith(
+                    value.fileComparator
+                )
+                withContext(Dispatchers.Main) {
+                    _currentFilesList.value = sorted.orEmpty()
+                }
+            }
+        }
+
     val storageAccess: LiveData<Boolean> = _storageAccess
     val currentFilesList: LiveData<List<File>> = _currentFilesList
 
@@ -31,12 +46,13 @@ class MainViewModel : ViewModel() {
     }
 
     fun refreshFilesList(files: Array<File>) {
-        _currentFilesList.value = files.toList()
+        _currentFilesList.value = files.sortedWith(currentSortOption.fileComparator)
     }
 
     fun refreshFilesList(file: File) {
         rootFile = file
-        _currentFilesList.value = file.listFiles()?.toList().orEmpty()
+        _currentFilesList.value =
+            file.listFiles()?.sortedWith(currentSortOption.fileComparator).orEmpty()
     }
 
     fun saveHashCodes(rootDir: File) {
@@ -63,6 +79,10 @@ class MainViewModel : ViewModel() {
             refreshFilesList(modifiedFiles.toTypedArray())
 
         modifiedShowed = !modifiedShowed
+    }
+
+    fun sortBy(sortOption: SortOption) {
+        currentSortOption = sortOption
     }
 
     fun isModified(file: File) = file in modifiedFiles

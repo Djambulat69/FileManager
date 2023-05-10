@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.isaev.filemanager.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), SortDialogCallback {
 
     private var _binding: ActivityMainBinding? = null
     private val binding: ActivityMainBinding get() = _binding!!
@@ -47,6 +47,11 @@ class MainActivity : AppCompatActivity() {
             when (menuItem.itemId) {
                 R.id.show_modified_menu_item -> {
                     viewModel.showModifiedFiles()
+                    true
+                }
+                R.id.sort_menu_item -> {
+                    SortBottomDialogFragment.newInstance(viewModel.currentSortOption)
+                        .show(supportFragmentManager, null)
                     true
                 }
                 else -> false
@@ -103,6 +108,10 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         _binding = null
         super.onDestroy()
+    }
+
+    override fun sortOption(option: SortOption) {
+        viewModel.sortBy(option)
     }
 
     companion object {
