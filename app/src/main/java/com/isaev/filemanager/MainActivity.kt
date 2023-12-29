@@ -83,7 +83,7 @@ class MainActivity : AppCompatActivity(), SortDialogCallback {
             }
         }
 
-        viewModel.currentFilesList.observeForever { files ->
+        viewModel.currentFilesList.observe(this) { files ->
             (binding.recyclerView.adapter as FilesAdapter).submitList(files)
             binding.pathText.text = viewModel.currentRootFile.path
         }
